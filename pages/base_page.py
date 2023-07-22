@@ -1,3 +1,4 @@
+from pages.locators import BasePageLocators
 from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
@@ -10,6 +11,13 @@ class BasePage:
         self._browser = browser
         self._browser.implicitly_wait(timeout)
         self._url = url
+
+    def go_to_login_page(self):
+        login_link = self._browser.find_element(*BasePageLocators.LOGIN_LINK)
+        login_link.click()
+
+    def should_be_login_link(self):
+        assert self.is_element_present(*BasePageLocators.LOGIN_LINK), "Login link is not presented"
 
     def open(self):
         self._browser.get(self._url)
