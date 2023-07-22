@@ -1,16 +1,45 @@
+import time
 import pytest
 from pages.product_page import ProductPage
 from pages.login_page import LoginPage
 from pages.basket_page import BasketPage
 
 
-N = list(range(10))
-N[7] = pytest.param(7, marks=pytest.mark.xfail)
+class TestUserAddToBasketFromProductPage:
+    @pytest.fixture(autouse=True)
+    def setup(self, browser):
+        url = "http://selenium1py.pythonanywhere.com/accounts/login/"
+        login_page = LoginPage(browser, url)
+        login_page.open()
+        email = f"{time.time()}@ghjk.com"
+        password = "12q34w56e"
+        login_page.register_new_user(email, password)
+
+    def test_user_cant_see_success_message(self, browser):
+        url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
+        page = ProductPage(browser, url)
+        page.open()
+        page.should_not_be_success_message()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        page = ProductPage(browser, url)
+        page.open()
+        page.add_to_basket()
+
+        page.should_be_correct_product_name()
+        page.should_be_correct_product_cost()
 
 
-@pytest.mark.parametrize('n', N)
-def test_guest_can_add_product_to_basket(browser, n):
-    url = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer{n}"
+def test_guest_cant_see_success_message(browser):
+    url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
+    page = ProductPage(browser, url)
+    page.open()
+    page.should_not_be_success_message()
+
+
+def test_guest_can_add_product_to_basket(browser):
+    url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
     page = ProductPage(browser, url)
     page.open()
     page.add_to_basket()
@@ -21,7 +50,7 @@ def test_guest_can_add_product_to_basket(browser, n):
 
 
 def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
-    url = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
+    url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
     page = ProductPage(browser, url)
     page.open()
     page.add_to_basket()
@@ -30,15 +59,8 @@ def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
     page.should_not_be_success_message()
 
 
-def test_guest_cant_see_success_message(browser):
-    url = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
-    page = ProductPage(browser, url)
-    page.open()
-    page.should_not_be_success_message()
-
-
 def test_message_disappeared_after_adding_product_to_basket(browser):
-    url = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
+    url = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=NewYear"
     page = ProductPage(browser, url)
     page.open()
     page.add_to_basket()
