@@ -16,3 +16,4 @@ class ProductPageLocators:
     PRODUCT_COST_RESULT = (By.CSS_SELECTOR, "div[id='messages'] div:nth-child(3) strong")
     PRODUCT_NAME = (By.CSS_SELECTOR, "div.product_main > h1")
     PRODUCT_COST = (By.CSS_SELECTOR, "div.product_main > p.price_color")
+    SUCCESS_MESSAGE = (By.CSS_SELECTOR, "div[id='messages'] div:nth-child(1)")
