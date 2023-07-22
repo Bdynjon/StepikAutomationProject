@@ -4,17 +4,18 @@ import pytest
 
 
 def pytest_addoption(parser):
-    parser.addoption("--language", action="Store", default="en", help="Choose language")
+    parser.addoption("--language", action="store", default="en", help="Choose language")
 
 
 @pytest.fixture()
 def browser(request):
 
-    language = request.getoption("language")
+    language = request.config.getoption("language")
     options = Options()
-    options.add_experimental_option("prefs", {"intl.accept_languages": language})
+    options.add_experimental_option('prefs', {'intl.accept_languages': language})
 
     browser = Chrome(options=options)
+    browser.implicitly_wait(5)
     yield browser
 
     browser.quit()
